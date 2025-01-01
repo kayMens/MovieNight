@@ -15,7 +15,7 @@ class HomeViewModel(
     private val _uiState = MutableStateFlow(HomeState())
     val uiState = _uiState.asStateFlow()
 
-    init {
+    fun init() {
         viewModelScope.launch {
             val movies = try {
                 moviesRepository.getMovies()
@@ -26,7 +26,8 @@ class HomeViewModel(
             _uiState.update {
                 it.copy(
                     isLoading = false,
-                    movies = movies
+                    movies = movies,
+                    carousel = movies.take(10)
                 )
             }
         }
@@ -35,5 +36,6 @@ class HomeViewModel(
 
 data class HomeState(
     val isLoading: Boolean = true,
-    val movies: List<Movie> = emptyList()
+    val movies: List<Movie> = emptyList(),
+    val carousel: List<Movie> = emptyList()
 )

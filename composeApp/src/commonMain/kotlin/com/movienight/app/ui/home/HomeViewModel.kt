@@ -20,6 +20,7 @@ class HomeViewModel(
             val movies = try {
                 moviesRepository.getMovies()
             } catch (ex: Exception) {
+                println(ex)
                 emptyList()
             }
             _uiState.update {

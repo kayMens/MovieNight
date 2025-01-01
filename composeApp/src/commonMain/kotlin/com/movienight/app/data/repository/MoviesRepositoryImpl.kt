@@ -16,4 +16,8 @@ class MoviesRepositoryImpl(
     }
 }
 
-fun MovieModel.toMovie() = Movie(id = id)
+fun MovieModel.toMovie() = Movie(
+    id = id,
+    title = title,
+    poster = poster
+)

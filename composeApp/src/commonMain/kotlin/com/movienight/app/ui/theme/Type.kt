@@ -3,37 +3,30 @@ package com.movienight.app.ui.theme
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.font.Typeface
-import kotlinx.coroutines.runBlocking
-import movienight.composeapp.generated.resources.Res
-import movienight.composeapp.generated.resources.actor
-import movienight.composeapp.generated.resources.aladin
-import org.jetbrains.compose.resources.FontResource
-import org.jetbrains.compose.resources.InternalResourceApi
 
 private val cache: MutableMap<String, Font> = mutableMapOf()
 
-fun getFont(name: String, res: FontResource): Font {
-    return cache.getOrPut(name) {
-        val byteArray = runBlocking {
-            res
-        }
-        Font(res, byteArray)
-    }
-}
+//fun getFont(name: String, res: FontResource): Font {
+//    return cache.getOrPut(name) {
+//        val byteArray = runBlocking {
+//            res
+//        }
+//        Font(res, byteArray)
+//    }
+//}
 
 val bodyFontFamily = FontFamily(
-    getFont("actor", Res.font.actor)
+//    getFont("actor", Res.font.actor)
 )
 
 val displayFontFamily = FontFamily(
-    getFont("aladin", Res.font.aladin)
+//    getFont("aladin", Res.font.aladin)
 )
 
 // Default Material 3 typography values
 val baseline = Typography()
 
-val Typography = Typography(
+val typography = Typography(
     displayLarge = baseline.displayLarge.copy(fontFamily = displayFontFamily),
     displayMedium = baseline.displayMedium.copy(fontFamily = displayFontFamily),
     displaySmall = baseline.displaySmall.copy(fontFamily = displayFontFamily),

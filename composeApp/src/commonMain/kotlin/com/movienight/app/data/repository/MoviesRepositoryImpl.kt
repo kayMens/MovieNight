@@ -19,5 +19,9 @@ class MoviesRepositoryImpl(
 fun MovieModel.toMovie() = Movie(
     id = id,
     title = title,
-    poster = poster
+    poster = poster,
+    year = year,
+    rating = rating,
+    plot = plot,
+    votes = votes
 )

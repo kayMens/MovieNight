@@ -7,8 +7,10 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
@@ -35,6 +37,9 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil3.compose.AsyncImage
 import com.movienight.app.domain.model.Movie
+import com.movienight.app.ui.extension.backInTime
+import com.movienight.app.ui.extension.nowWatching
+import com.movienight.app.ui.extension.shellysFinest
 import org.koin.compose.viewmodel.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -61,9 +66,13 @@ fun HomeScreen(
                 .padding(it)
                 .verticalScroll(scrollState)
         ) {
+            Hero(state.todayPick)
+
             Spacer(modifier = Modifier.height(30.dp))
 
             // Featured
+            CategoryTitle("Featured")
+
             HorizontalMultiBrowseCarousel(
                 state = carouselState,
                 preferredItemWidth = 260.dp,
@@ -81,31 +90,65 @@ fun HomeScreen(
             Spacer(modifier = Modifier.height(30.dp))
 
             // Highly Rated
-            CategoryTitle(
-                title = "Shelly's Finest",
-            )
+            CategoryTitle("Shelly's Finest")
 
-            MoviesRow(state.movies.take(10))
+            MoviesRow(state.movies.shellysFinest())
 
             Spacer(modifier = Modifier.height(30.dp))
 
             //Current Movies
-            CategoryTitle(
-                title = "Now Watching",
-            )
+            CategoryTitle("Now Watching")
 
-            MoviesRow(state.movies.take(10))
+            MoviesRow(state.movies.nowWatching())
 
             Spacer(modifier = Modifier.height(30.dp))
 
             //Old Movies
-            CategoryTitle(
-                title = "Back in Time",
-            )
+            CategoryTitle("Back in Time")
 
-            MoviesRow(state.movies.take(10))
+            MoviesRow(state.movies.backInTime())
 
             Spacer(modifier = Modifier.height(20.dp))
+        }
+    }
+}
+
+@Composable
+fun Hero(
+    movie: Movie?
+) {
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(300.dp),
+    ) {
+        AsyncImage(
+            model = movie?.poster,
+            contentDescription = "cover",
+            contentScale = ContentScale.Crop,
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(300.dp)
+        )
+
+        Box(
+            contentAlignment = Alignment.BottomStart,
+            modifier = Modifier
+                .fillMaxSize()
+                .background(
+                    color = Color.Black.copy(alpha = 0.2f)
+                )
+        ) {
+            if (movie != null) {
+                Text(
+                    text = "Today's Pick: ${movie.title}",
+                    style = MaterialTheme.typography.titleMedium,
+                    color = Color.Black,
+                    maxLines = 1,
+                    modifier = Modifier.background(Color.White)
+                        .padding(5.dp)
+                )
+            }
         }
     }
 }
@@ -169,7 +212,9 @@ fun MoviesRow(
 }
 
 @Composable
-fun MovieCard(item: Movie) {
+fun MovieCard(
+    item: Movie
+) {
     Card(
         shape = MaterialTheme.shapes.small,
         colors = CardDefaults.cardColors(
@@ -179,18 +224,21 @@ fun MovieCard(item: Movie) {
             .width(160.dp)
             .height(180.dp)
     ) {
-        Box(modifier = Modifier.fillMaxSize()) {
+        Box(
+            modifier = Modifier.fillMaxSize()
+                .padding(bottom = 10.dp)
+        ) {
             AsyncImage(
                 model = item.poster,
                 contentDescription = item.title,
                 contentScale = ContentScale.Crop,
-                modifier = Modifier.fillMaxSize()
+                modifier = Modifier.size(165.dp, 185.dp)
             )
             // Overlay Title
             Box(
                 modifier = Modifier
                     .fillMaxSize()
-                    .background(Color.Black.copy(alpha = 0.5f)),
+                    .background(Color.Black.copy(alpha = 0.3f)),
                 contentAlignment = Alignment.BottomStart
             ) {
                 Text(

@@ -4,6 +4,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.movienight.app.domain.model.Movie
 import com.movienight.app.domain.repository.MoviesRepository
+import com.movienight.app.ui.extension.cover
+import com.movienight.app.ui.extension.featured
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
@@ -27,7 +29,8 @@ class HomeViewModel(
                 it.copy(
                     isLoading = false,
                     movies = movies,
-                    carousel = movies.take(10)
+                    carousel = movies.featured(),
+                    todayPick = movies.cover()
                 )
             }
         }
@@ -37,5 +40,6 @@ class HomeViewModel(
 data class HomeState(
     val isLoading: Boolean = true,
     val movies: List<Movie> = emptyList(),
-    val carousel: List<Movie> = emptyList()
+    val carousel: List<Movie> = emptyList(),
+    val todayPick: Movie? = null
 )

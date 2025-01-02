@@ -1,46 +1,44 @@
 package com.movienight.app.ui.theme
 
 import androidx.compose.material3.Typography
-import androidx.compose.ui.text.font.Font
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.text.font.FontFamily
+import movienight.composeapp.generated.resources.Res
+import movienight.composeapp.generated.resources.actor
+import movienight.composeapp.generated.resources.aladin
+import org.jetbrains.compose.resources.Font
 
-private val cache: MutableMap<String, Font> = mutableMapOf()
-
-//fun getFont(name: String, res: FontResource): Font {
-//    return cache.getOrPut(name) {
-//        val byteArray = runBlocking {
-//            res
-//        }
-//        Font(res, byteArray)
-//    }
-//}
-
-val bodyFontFamily = FontFamily(
-//    getFont("actor", Res.font.actor)
+@Composable
+fun bodyFontFamily() = FontFamily(
+    Font(Res.font.actor)
 )
 
-val displayFontFamily = FontFamily(
-//    getFont("aladin", Res.font.aladin)
+@Composable
+fun displayFontFamily() = FontFamily(
+    Font(Res.font.aladin)
 )
 
-// Default Material 3 typography values
-val baseline = Typography()
+@Composable
+fun typography() = Typography().run {
+    val bodyFont = bodyFontFamily()
+    val displayFont = displayFontFamily()
 
-val typography = Typography(
-    displayLarge = baseline.displayLarge.copy(fontFamily = displayFontFamily),
-    displayMedium = baseline.displayMedium.copy(fontFamily = displayFontFamily),
-    displaySmall = baseline.displaySmall.copy(fontFamily = displayFontFamily),
-    headlineLarge = baseline.headlineLarge.copy(fontFamily = displayFontFamily),
-    headlineMedium = baseline.headlineMedium.copy(fontFamily = displayFontFamily),
-    headlineSmall = baseline.headlineSmall.copy(fontFamily = displayFontFamily),
-    titleLarge = baseline.titleLarge.copy(fontFamily = displayFontFamily),
-    titleMedium = baseline.titleMedium.copy(fontFamily = displayFontFamily),
-    titleSmall = baseline.titleSmall.copy(fontFamily = displayFontFamily),
-    bodyLarge = baseline.bodyLarge.copy(fontFamily = bodyFontFamily),
-    bodyMedium = baseline.bodyMedium.copy(fontFamily = bodyFontFamily),
-    bodySmall = baseline.bodySmall.copy(fontFamily = bodyFontFamily),
-    labelLarge = baseline.labelLarge.copy(fontFamily = bodyFontFamily),
-    labelMedium = baseline.labelMedium.copy(fontFamily = bodyFontFamily),
-    labelSmall = baseline.labelSmall.copy(fontFamily = bodyFontFamily),
-)
+    copy(
+        displayLarge = displayLarge.copy(fontFamily = displayFont),
+        displayMedium = displayMedium.copy(fontFamily = displayFont),
+        displaySmall = displaySmall.copy(fontFamily = displayFont),
+        headlineLarge = headlineLarge.copy(fontFamily = displayFont),
+        headlineMedium = headlineMedium.copy(fontFamily = displayFont),
+        headlineSmall = headlineSmall.copy(fontFamily = displayFont),
+        titleLarge = titleLarge.copy(fontFamily = displayFont),
+        titleMedium = titleMedium.copy(fontFamily = displayFont),
+        titleSmall = titleSmall.copy(fontFamily = displayFont),
+        bodyLarge = bodyLarge.copy(fontFamily = bodyFont),
+        bodyMedium = bodyMedium.copy(fontFamily = bodyFont),
+        bodySmall = bodySmall.copy(fontFamily = bodyFont),
+        labelLarge = labelLarge.copy(fontFamily = bodyFont),
+        labelMedium = labelMedium.copy(fontFamily = bodyFont),
+        labelSmall = labelSmall.copy(fontFamily = bodyFont),
+    )
+}
 

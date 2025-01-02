@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -31,7 +32,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -63,10 +66,18 @@ fun HomeScreen(
         Column(
             modifier = modifier
                 .fillMaxSize()
-                .padding(it)
+                .padding(
+                    bottom = it.calculateBottomPadding()
+                )
                 .verticalScroll(scrollState)
         ) {
-            Hero(state.todayPick)
+            Hero(
+                state.todayPick,
+                modifier = Modifier.graphicsLayer {
+                    alpha = 1f - ((scrollState.value.toFloat() / scrollState.maxValue) * 1.5f)
+                    translationY = 0.3f * scrollState.value
+                }
+            )
 
             Spacer(modifier = Modifier.height(30.dp))
 
@@ -115,10 +126,11 @@ fun HomeScreen(
 
 @Composable
 fun Hero(
-    movie: Movie?
+    movie: Movie?,
+    modifier: Modifier = Modifier
 ) {
     Box(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .height(300.dp),
     ) {
@@ -143,10 +155,17 @@ fun Hero(
                 Text(
                     text = "Today's Pick: ${movie.title}",
                     style = MaterialTheme.typography.titleMedium,
-                    color = Color.Black,
+                    color = MaterialTheme.colorScheme.onPrimary,
                     maxLines = 1,
-                    modifier = Modifier.background(Color.White)
-                        .padding(5.dp)
+                    modifier = Modifier
+                        .background(
+                            color = MaterialTheme.colorScheme.primary,
+                            shape = RoundedCornerShape(topEnd = 10.dp)
+                        )
+                        .padding(
+                            vertical = 5.dp,
+                            horizontal = 10.dp
+                        )
                 )
             }
         }
@@ -185,7 +204,9 @@ fun CarouselItemContent(
             Text(
                 text = item.title,
                 color = Color.White,
-                style = MaterialTheme.typography.titleMedium,
+                style = MaterialTheme.typography.bodyMedium,
+                maxLines = 1,
+                fontWeight = FontWeight.Bold,
                 textAlign = TextAlign.Start,
                 modifier = Modifier.padding(16.dp)
             )
@@ -218,7 +239,7 @@ fun MovieCard(
     Card(
         shape = MaterialTheme.shapes.small,
         colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.background
+            containerColor = MaterialTheme.colorScheme.primary
         ),
         modifier = Modifier
             .width(160.dp)
@@ -226,7 +247,7 @@ fun MovieCard(
     ) {
         Box(
             modifier = Modifier.fillMaxSize()
-                .padding(bottom = 10.dp)
+                .padding(bottom = 8.dp)
         ) {
             AsyncImage(
                 model = item.poster,
@@ -238,13 +259,14 @@ fun MovieCard(
             Box(
                 modifier = Modifier
                     .fillMaxSize()
-                    .background(Color.Black.copy(alpha = 0.3f)),
+                    .background(Color.Black.copy(alpha = 0.5f)),
                 contentAlignment = Alignment.BottomStart
             ) {
                 Text(
                     text = item.title,
                     color = Color.White,
-                    style = MaterialTheme.typography.titleSmall,
+                    style = MaterialTheme.typography.bodyMedium,
+                    fontWeight = FontWeight.Bold,
                     textAlign = TextAlign.Start,
                     maxLines = 2,
                     modifier = Modifier.padding(8.dp)
@@ -261,6 +283,7 @@ fun CategoryTitle(
     Text(
         text = title,
         style = MaterialTheme.typography.headlineSmall,
+        color = MaterialTheme.colorScheme.onBackground,
         modifier = Modifier.padding(horizontal = 16.dp)
     )
 }

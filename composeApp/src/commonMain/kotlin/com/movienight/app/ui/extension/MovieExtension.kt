@@ -27,7 +27,7 @@ fun List<Movie>.backInTime(): List<Movie> {
 }
 
 fun List<Movie>.cover(): Movie {
-    return filter { it.year > 2000 }
+    return filter { it.year > 2017 }
         .shuffled()
         .first()
 }

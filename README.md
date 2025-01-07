@@ -47,9 +47,9 @@ Movie Night is a sample Kotlin Multiplatform project designed to showcase a cate
   
 ## Screenshots
 
-![Phone Home](screenshots/phone_home.png) ![Phone Preview](screenshots/phone_preview.png)
+![Phone Home](screenshots/phone_home.png?raw=true) ![Phone Preview](screenshots/phone_preview.png?raw=true)
 
-![Web](screenshots/web.png)
+![Web](screenshots/web.png?raw=true)
 
 ## License
 

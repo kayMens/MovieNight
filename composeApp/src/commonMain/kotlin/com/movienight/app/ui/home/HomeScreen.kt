@@ -1,6 +1,7 @@
 package com.movienight.app.ui.home
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -21,13 +22,18 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.carousel.HorizontalMultiBrowseCarousel
 import androidx.compose.material3.carousel.rememberCarouselState
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
@@ -40,9 +46,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil3.compose.AsyncImage
 import com.movienight.app.domain.model.Movie
-import com.movienight.app.ui.extension.backInTime
-import com.movienight.app.ui.extension.nowWatching
-import com.movienight.app.ui.extension.shellysFinest
+import com.movienight.app.ui.preview.PreviewScreen
 import org.koin.compose.viewmodel.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -55,6 +59,10 @@ fun HomeScreen(
 
     val carouselState = rememberCarouselState { state.carousel.count() }
     val scrollState = rememberScrollState()
+    val sheetState = rememberModalBottomSheetState()
+
+    var showMoviePreview by remember { mutableStateOf(false) }
+    var movie: Movie? by remember { mutableStateOf(null) }
 
     LaunchedEffect(key1 = Unit) {
         viewModel.init()
@@ -62,12 +70,12 @@ fun HomeScreen(
 
     Scaffold(
         containerColor = MaterialTheme.colorScheme.surfaceContainer
-    ) {
+    ) { padding ->
         Column(
             modifier = modifier
                 .fillMaxSize()
                 .padding(
-                    bottom = it.calculateBottomPadding()
+                    bottom = padding.calculateBottomPadding()
                 )
                 .verticalScroll(scrollState)
         ) {
@@ -78,6 +86,10 @@ fun HomeScreen(
                     translationY = 0.3f * scrollState.value
                 }
             )
+            {
+                showMoviePreview = true
+                movie = it
+            }
 
             Spacer(modifier = Modifier.height(30.dp))
 
@@ -86,15 +98,20 @@ fun HomeScreen(
 
             HorizontalMultiBrowseCarousel(
                 state = carouselState,
-                preferredItemWidth = 260.dp,
+                preferredItemWidth = 240.dp,
                 itemSpacing = 8.dp,
                 contentPadding = PaddingValues(horizontal = 16.dp),
                 modifier = Modifier
                     .height(250.dp)
             ) { index ->
+                val item = state.carousel[index]
                 CarouselItemContent(
-                    item = state.carousel[index],
+                    item = item,
                     modifier = Modifier.maskClip(MaterialTheme.shapes.large)
+                        .clickable {
+                            showMoviePreview = true
+                            movie = item
+                        }
                 )
             }
 
@@ -103,23 +120,51 @@ fun HomeScreen(
             // Highly Rated
             CategoryTitle("Shelly's Finest")
 
-            MoviesRow(state.movies.shellysFinest())
+            MoviesRow(
+                movies = state.shellysFinest
+            ) {
+                showMoviePreview = true
+                movie = it
+            }
 
             Spacer(modifier = Modifier.height(30.dp))
 
             //Current Movies
             CategoryTitle("Now Watching")
 
-            MoviesRow(state.movies.nowWatching())
+            MoviesRow(
+                movies = state.nowWatching
+            ) {
+                showMoviePreview = true
+                movie = it
+            }
 
             Spacer(modifier = Modifier.height(30.dp))
 
             //Old Movies
             CategoryTitle("Back in Time")
 
-            MoviesRow(state.movies.backInTime())
+            MoviesRow(
+                movies = state.backInTime
+            ) {
+                showMoviePreview = true
+                movie = it
+            }
 
             Spacer(modifier = Modifier.height(20.dp))
+        }
+
+        if (showMoviePreview) {
+            ModalBottomSheet(
+                modifier = Modifier
+                    .padding(top = padding.calculateTopPadding()),
+                sheetState = sheetState,
+                onDismissRequest = {
+                    showMoviePreview = false
+                }
+            ) {
+                PreviewScreen(movie)
+            }
         }
     }
 }
@@ -127,7 +172,8 @@ fun HomeScreen(
 @Composable
 fun Hero(
     movie: Movie?,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onClick: (Movie?) -> Unit
 ) {
     Box(
         modifier = modifier
@@ -141,6 +187,7 @@ fun Hero(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(300.dp)
+                .clickable { onClick(movie) }
         )
 
         Box(
@@ -178,7 +225,7 @@ fun CarouselItemContent(
     modifier: Modifier = Modifier
 ) {
     Box(
-        modifier = modifier.height(240.dp)
+        modifier = modifier.height(220.dp)
             .background(
                 color = MaterialTheme.colorScheme.background
             )
@@ -217,7 +264,8 @@ fun CarouselItemContent(
 @Composable
 fun MoviesRow(
     movies: List<Movie>,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onClick: (Movie?) -> Unit
 ) {
     LazyRow(
         modifier = modifier
@@ -227,21 +275,26 @@ fun MoviesRow(
         contentPadding = PaddingValues(horizontal = 16.dp)
     ) {
         items(movies) { item ->
-            MovieCard(item)
+            MovieCard(
+                item = item,
+                modifier = Modifier
+                    .clickable { onClick(item) }
+            )
         }
     }
 }
 
 @Composable
 fun MovieCard(
-    item: Movie
+    item: Movie,
+    modifier: Modifier = Modifier
 ) {
     Card(
         shape = MaterialTheme.shapes.small,
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.primary
         ),
-        modifier = Modifier
+        modifier = modifier
             .width(160.dp)
             .height(180.dp)
     ) {

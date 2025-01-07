@@ -15,5 +15,9 @@ data class MovieModel(
     @SerialName("numVotes")
     val votes: Int = 0,
     @SerialName("description")
-    val plot: String? = ""
+    val plot: String = "",
+    @SerialName("runtimeMinutes")
+    val runtime: Int = 0,
+    @SerialName("url")
+    val link: String = ""
 )

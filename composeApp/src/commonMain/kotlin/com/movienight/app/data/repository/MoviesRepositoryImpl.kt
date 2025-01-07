@@ -23,5 +23,7 @@ fun MovieModel.toMovie() = Movie(
     year = year,
     rating = rating,
     plot = plot,
-    votes = votes
+    votes = votes,
+    runtime = runtime,
+    link = link
 )

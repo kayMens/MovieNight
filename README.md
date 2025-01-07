@@ -46,9 +46,10 @@ Movie Night is a sample Kotlin Multiplatform project designed to showcase a cate
    - Web: Use `:composeApp:wasmJsBrowserRun` to start the web app.
   
 ## Screenshots
-![Phone Home](screenshots/phone_home.png)
+
+<img alt="Phone Home" src="screenshots/phone_home.png" width="300"/>
 ![Phone Preview](screenshots/phone_preview.png)
-![Web](screenshots/phone_web.png)
+![Web](screenshots/web.png)
 
 ## License
 

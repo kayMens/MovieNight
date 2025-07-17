@@ -1,6 +1,6 @@
 # Movie Night 🎥  
 
-Movie Night is a sample Kotlin Multiplatform project designed to showcase a categorized collection of movies. Users can explore different movie categories and view detailed previews in a modal on click. This project demonstrates the capabilities of Compose Multiplatform and Clean Architecture principles, targeting Android, iOS, and Web platforms with a shared UI.  
+Movie Night is a sample Compose Multiplatform project designed to showcase a categorized collection of movies. Users can explore different movie categories and view detailed previews in a modal on click. This project demonstrates the capabilities of Compose Multiplatform and Clean Architecture principles, targeting Android, iOS, and Web platforms with a shared UI.  
 
 ## Features  
 
